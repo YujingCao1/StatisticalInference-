@@ -1,0 +1,28 @@
+#load dataset "ToothGrowth"
+dataset=ToothGrowth
+library(ggplot2)
+
+#Basic Exploratory Data Analysis
+ggplot(data=ToothGrowth, aes(x=as.factor(dose), y=len, fill=supp)) +
+  geom_bar(stat="identity",) +
+  facet_grid(. ~ supp) +
+  xlab("Dose in miligrams") +
+  ylab("Tooth length") +
+  guides(fill=guide_legend(title="Supplement type"))
+#As we can from the graph, there is a positive correlation between the tooth length and the dose of Vitamin C for both
+#delivery methods.In the other word, as the dose of Vitamin C increases, the tooth length increases.
+
+fit <- lm(len ~ dose + supp, data=ToothGrowth)
+summary(fit)
+#This summary shows us that the adjust R-squared is 0.6934 which means the model explains 70% of the variance in the data.
+#The interceptis 9.2725,meaning without supplyment Vitamin C, the average tooth growth is 9.2725 unit.
+#The coefficient of dose is 9.7626, which means the tooth growth increases 9.7636 units with increasing the dose 1 miligrams.
+#Since suppVC is categorical data, dummy variables are used. When ascorbic acid are given, the tooth growth will 
+#decrease 5.889905 units; if the orange juice are given, the tooth growth will increase 5.889905 units.
+
+#Use confidence intervals and hypothesis tests to compare tooth growth by supp and dose
+confint(fit)
+#The 95% of confidence interval of dose is [8.007741,11.519402], and 95% of confidence interval
+# of suppVC is [-5.889905,-1.510095]. The null hypothesis is coefficients are 0, that is, dose and suppVC don't have significant effect on tooth growth.
+#However, neither of these two coefficient cover 0, thus, null hypothesis is rejected given the significance level is 5%.
+
